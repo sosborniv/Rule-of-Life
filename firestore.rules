@@ -1,0 +1,18 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isSignedIn() { return request.auth != null; }
+    function isOwner() { return isSignedIn() && request.auth.uid == resource.data.userId; }
+    function isCreatingOwn() { return isSignedIn() && request.auth.uid == request.resource.data.userId; }
+
+    match /users/{uid} {
+      allow create: if isSignedIn() && request.auth.uid == uid && request.resource.data.uid == uid;
+      allow read, update, delete: if isSignedIn() && request.auth.uid == uid;
+    }
+
+    match /{colName=practiceSessions|examenEntries|lectioSessions|breathPrayers|rules}/{docId} {
+      allow create: if isCreatingOwn();
+      allow read, update, delete: if isOwner();
+    }
+  }
+}
