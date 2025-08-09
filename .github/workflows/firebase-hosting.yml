@@ -37,6 +37,26 @@ jobs:
           VITE_FIREBASE_PROJECT_ID: ${{ secrets.VITE_FIREBASE_PROJECT_ID }}
           VITE_FIREBASE_APP_ID: ${{ secrets.VITE_FIREBASE_APP_ID }}
           VITE_FIREBASE_MEASUREMENT_ID: ${{ secrets.VITE_FIREBASE_MEASUREMENT_ID }}
+
+      - name: Echo projectId and SA email
+        shell: bash
+        run: |
+          python - <<'PY'
+          import os, json
+          pid = os.getenv('PID','')
+          sa  = os.getenv('SA','')
+          print('ProjectId from secrets:', pid)
+          try:
+            email = json.loads(sa)['client_email']
+            print('Service Account email from secret:', email)
+          except Exception as e:
+            print('SA JSON parse error:', e)
+            PY
+        env:
+          PID: ${{ secrets.VITE_FIREBASE_PROJECT_ID }}
+          SA:  ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+
+
       - name: Sanity check service account can see the project
         run: |
           cat > $RUNNER_TEMP/sa.json <<'JSON'
