@@ -1,0 +1,23 @@
+# Node
+node_modules/
+dist/
+
+# Env (never commit these)
+.env
+.env.*
+
+# Firebase / keys (never commit these)
+firebase-sa.json
+*.key
+*.pem
+
+# Logs
+npm-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Editor/OS cruft
+.vscode/*
+!.vscode/extensions.json
+.DS_Store
+Thumbs.db
