@@ -45,10 +45,10 @@ jobs:
           import os, json
           pid = os.getenv('PID','')
           sa  = os.getenv('SA','')
-          print('ProjectId from secrets:', pid)
+          print('rule-of-life-app', pid)
           try:
             email = json.loads(sa)['client_email']
-            print('Service Account email from secret:', email)
+            print('github-actions-deployer@mood-check-in-399e1.iam.gserviceaccount.com', email)
           except Exception as e:
             print('SA JSON parse error:', e)
             PY
