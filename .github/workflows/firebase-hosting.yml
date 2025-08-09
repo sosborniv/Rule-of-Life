@@ -37,6 +37,14 @@ jobs:
           VITE_FIREBASE_PROJECT_ID: ${{ secrets.VITE_FIREBASE_PROJECT_ID }}
           VITE_FIREBASE_APP_ID: ${{ secrets.VITE_FIREBASE_APP_ID }}
           VITE_FIREBASE_MEASUREMENT_ID: ${{ secrets.VITE_FIREBASE_MEASUREMENT_ID }}
+      - name: Sanity check service account can see the project
+        run: |
+          cat > $RUNNER_TEMP/sa.json <<'JSON'
+          ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          JSON
+          export GOOGLE_APPLICATION_CREDENTIALS="$RUNNER_TEMP/sa.json"
+          npx firebase-tools@latest projects:list --json
+          npx firebase-tools@latest apps:list --project "${{ secrets.VITE_FIREBASE_PROJECT_ID }}" --json || true
 
       - name: Deploy (Preview for PRs)
         if: ${{ github.event_name == 'pull_request' }}
